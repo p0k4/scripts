@@ -1,39 +1,9 @@
 @echo off
 chcp 65001 >nul
 
-:: ======================================================
-::  Script de instalação básica para Windows 11 (20 apps)
-::  Usa o Windows Package Manager (winget)
-:: ======================================================
-
-:: Auto-elevar se nao estiver em modo administrador (relanca apenas uma vez)
-if /i "%~1"=="--elevated" (
-    shift
-) else (
-    net session >nul 2>&1
-    if %errorlevel% NEQ 0 (
-        echo.
-        echo  [!] A pedir permissao de administrador...
-        set "BAT=%~f0"
-        powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '$env:SystemRoot\System32\cmd.exe' -ArgumentList '/k \"\"\"%BAT%\"\"\" --elevated' -Verb RunAs"
-        if errorlevel 1 (
-            echo  [!] Elevacao cancelada ou falhou. Executa manualmente como admin.
-            pause
-        )
-        exit /b
-    )
-)
-
-:: Verificar se o winget existe
-where winget >nul 2>&1
-if %errorlevel% NEQ 0 (
-    echo.
-    echo  [!] O Windows Package Manager (winget) nao foi encontrado.
-    echo      Garante que tens o "App Installer" instalado pela Microsoft Store.
-    echo.
-    pause
-    exit /b 1
-)
+echo [DEBUG] Script wapps_w11.bat arrancou.
+echo Se estas linhas aparecem, o ficheiro esta a ser executado.
+pause
 
 :MENU
 cls
