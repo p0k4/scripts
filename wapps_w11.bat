@@ -7,14 +7,12 @@ chcp 65001 >nul
 :: ======================================================
 
 :: Auto-elevar se nao estiver em modo administrador (fltmc falha sem admin)
-set "SCRIPT=%~f0"
-set "WORKDIR=%~dp0"
 fltmc >nul 2>&1
 if %errorlevel% NEQ 0 (
     echo.
     echo  [!] A pedir permissao de administrador...
-    powershell -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/k \"\"%SCRIPT%\"\"' -WorkingDirectory '%WORKDIR%' -Verb RunAs"
-    if %errorlevel% NEQ 0 (
+    powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -WorkingDirectory '%~dp0' -Verb RunAs"
+    if errorlevel 1 (
         echo  [!] Elevacao cancelada ou falhou. Executa manualmente como admin.
         pause
     )
