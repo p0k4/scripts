@@ -6,16 +6,16 @@ chcp 65001 >nul
 ::  Usa o Windows Package Manager (winget)
 :: ======================================================
 
-:: Auto-elevar se nao estiver em modo administrador
-:: Usa --elevated para evitar loop infinito ao relancar
-if "%~1"=="--elevated" (
+:: Auto-elevar se nao estiver em modo administrador (relanca apenas uma vez)
+if /i "%~1"=="--elevated" (
     shift
 ) else (
     net session >nul 2>&1
     if %errorlevel% NEQ 0 (
         echo.
         echo  [!] A pedir permissao de administrador...
-        powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process cmd.exe -Verb RunAs -ArgumentList '/k cd /d \"\"%~dp0\"\" ^& \"\"%~f0\"\" --elevated'"
+        set "BAT=%~f0"
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '$env:SystemRoot\System32\cmd.exe' -ArgumentList '/k \"\"\"%BAT%\"\"\" --elevated' -Verb RunAs"
         if errorlevel 1 (
             echo  [!] Elevacao cancelada ou falhou. Executa manualmente como admin.
             pause
